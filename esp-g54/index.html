@@ -6,29 +6,38 @@
 </head>
 <body>
 
-<h1>G54 Bridge ACI</h1>
+<h1>Bridge Application Control Interface</h1>
 
 <div class="section">
   <h2>Bridge Status</h2>
-  <p><span class="status-light green"></span> Bridge Closed</p> 
-  <p><span class="status-light red"></span> Bridge Open</p>
-  <p><span class="status-light yellow"></span> Bridge Moving</p>
-</div>
-<!-- ESP32 control buttons -->
+  <p><span id="closed" class="status-light green"></span> Bridge Closed</p> 
+  <p><span id="open" class="status-light red"></span> Bridge Open</p>
+  <p><span id="moving" class="status-light yellow"></span> Bridge Moving</p>
+
+<!--BRIDGE CONTROL STATES-->
 <div class="section">
-  <h2>ESP32 Testing Controls</h2>
-  <button onclick="startMotor()" style="background-color: lightgreen;">Motor Start</button>
-  <button onclick="stopMotor()" style="background-color: lightblue;">Motor Stop</button>
-  <button onclick="ledOn()">LED On</button>
-  <button onclick="ledOff()">LED Off</button>
-  <button onclick="buckOn()">Buck On</button>
-  <button onclick="buckOff()">Buck Off</button>
-  <button onclick="checkLimits()">Check Limit Switches</button>
-  <button onclick="getUltrasonic1()">Ultrasonic 1</button>
-  <button onclick="getUltrasonic2()">Ultrasonic 2</button>
+  <h2>Bridge Control States</h2>
+  <button onclick="OpenBridge()" style="background-color: hsl(125, 83%, 47%);">Open Bridge</button>
+  <button onclick="CloseBridge()" style="background-color: hsl(125, 83%, 47%);">Close Bridge</button>
+  <button onclick="CloseBridge()" style="background-color: hsl(0, 100%, 62%);">Emergency Stop</button>
+  <button onclick="CloseBridge()" style="background-color: hsl(45, 17%, 48%);">Reset State</button>
+
+</div>
+<!-- ESP32 TESTING STATES-->
+<div class="section">
+  <h2>Bridge Testing States</h2>
+  <button onclick="startMotor()" style="background-color: rgb(189, 222, 169);">Motor Start</button>
+  <button onclick="stopMotor()" style="background-color: rgb(189, 222, 169);">Motor Stop</button>
+  <button onclick="ledOn()" style="background-color: rgb(189, 222, 169);">LED On</button>
+  <button onclick="ledOff()" style="background-color: rgb(189, 222, 169);">LED Off</button>
+  <button onclick="buckOn()" style="background-color: rgb(189, 222, 169);">Buck On</button>
+  <button onclick="buckOff()" style="background-color: rgb(189, 222, 169);">Buck Off</button>
+  <button onclick="checkLimits()" style="background-color: rgb(189, 222, 169);">Check Limit Switches</button>
+  <button onclick="getUltrasonic1()" style="background-color: rgb(189, 222, 169);">Ultrasonic 1</button>
+  <button onclick="getUltrasonic2()"style="background-color: rgb(189, 222, 169);">Ultrasonic 2</button>
 </div>
 
-<div class="section">
+<div class="section"> <!--Should eventually invoke a response from the ESP, todo-->
   <h2>Sensors</h2>
   <p>Boat Detected: <span class="status-light green"></span></p>
   <p>Car Detected: <span class="status-light red"></span></p>
@@ -36,7 +45,7 @@
 </div>
 
 <div class="section">
-  <h2>Bridge Animation</h2>
+  <h2>Bridge Animation Status</h2>
   <div class="bridge-area">
     <div class="bridge-road" id="bridge"></div>
     <div class="boat"></div>
@@ -49,69 +58,43 @@
 
   // ---- ESP32 hardware controls ----
   function startMotor() {
-      fetch(`${ESP32_IP}/motor/start`)
-        .then(r => r.text())
-        .then(console.log)
-        .catch(err => console.error("Error:", err));
-    }
-
-    function stopMotor() {
-      fetch(`${ESP32_IP}/motor/stop`)
-        .then(r => r.text())
-        .then(console.log)
-        .catch(err => console.error("Error:", err));
-    }
-
-  function ledOn() { 
-    fetch(`${ESP32_IP}/led/on`)
+    fetch(`${ESP32_IP}/motor/start`)
       .then(r => r.text())
       .then(console.log)
       .catch(err => console.error("Error:", err));
+
+    // ---- UI status updates ----
+    document.getElementById("open").classList.add("active");
+    document.getElementById("closed").classList.remove("active");
+
+    let moving = document.getElementById("moving");
+    moving.classList.add("flashing");
+
+    setTimeout(() => {
+      moving.classList.remove("flashing");
+    }, 3000);
   }
 
-  function ledOff() {
-    fetch(`${ESP32_IP}/led/off`)
+  function stopMotor() {
+    fetch(`${ESP32_IP}/motor/stop`)
       .then(r => r.text())
       .then(console.log)
       .catch(err => console.error("Error:", err));
+
+    // Reset bridge status
+    document.getElementById("open").classList.remove("active");
+    document.getElementById("closed").classList.add("active");
+    document.getElementById("moving").classList.remove("flashing");
   }
 
-  function buckOn() {
-    fetch(`${ESP32_IP}/buck/on`)
-      .then(r => r.text())
-      .then(console.log)
-      .catch(err => console.error("Error:", err));
-  }
-
-  function buckOff() {
-    fetch(`${ESP32_IP}/buck/off`)
-      .then(r => r.text())
-      .then(console.log)
-      .catch(err => console.error("Error:", err));
-  }
-
-  function checkLimits() {
-    fetch(`${ESP32_IP}/limits`)
-      .then(r => r.text())
-      .then(alert)
-      .catch(err => console.error("Error:", err));
-  }
-
-  function getUltrasonic1() {
-    fetch(`${ESP32_IP}/ultrasonic/1`)
-      .then(r => r.text())
-      .then(alert)
-      .catch(err => console.error("Error:", err));
-  }
-
-  function getUltrasonic2() {
-    fetch(`${ESP32_IP}/ultrasonic/2`)
-      .then(r => r.text())
-      .then(alert)
-      .catch(err => console.error("Error:", err));
-  }
+  function ledOn() { fetch(`${ESP32_IP}/led/on`).then(r => r.text()).then(console.log).catch(err => console.error("Error:", err)); }
+  function ledOff() { fetch(`${ESP32_IP}/led/off`).then(r => r.text()).then(console.log).catch(err => console.error("Error:", err)); }
+  function buckOn() { fetch(`${ESP32_IP}/buck/on`).then(r => r.text()).then(console.log).catch(err => console.error("Error:", err)); }
+  function buckOff() { fetch(`${ESP32_IP}/buck/off`).then(r => r.text()).then(console.log).catch(err => console.error("Error:", err)); }
+  function checkLimits() { fetch(`${ESP32_IP}/limits`).then(r => r.text()).then(alert).catch(err => console.error("Error:", err)); }
+  function getUltrasonic1() { fetch(`${ESP32_IP}/ultrasonic/1`).then(r => r.text()).then(alert).catch(err => console.error("Error:", err)); }
+  function getUltrasonic2() { fetch(`${ESP32_IP}/ultrasonic/2`).then(r => r.text()).then(alert).catch(err => console.error("Error:", err)); }
 </script>
-
 
 </body> 
 </html>
