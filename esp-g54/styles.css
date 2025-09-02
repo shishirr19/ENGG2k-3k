@@ -1,0 +1,77 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: #f4f4f4;
+}
+h1 {
+  text-align: center;
+}
+.section {
+  background: white;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+button {
+  margin: 5px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+button:hover {
+  opacity: 0.9;
+}
+.status-light {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.green { background-color: green; }
+.red { background-color: red; }
+.yellow { background-color: yellow; }
+.bridge-area {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background: #87CEEB; /* sky */
+  overflow: hidden;
+}
+.river {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  background: #1E90FF;
+}
+.bridge-road {
+  position: absolute;
+  bottom: 60px;
+  left: 25%;
+  width: 50%;
+  height: 20px;
+  background: #555;
+  transform-origin: bottom center;
+  transition: transform 2s;
+}
+.bridge-road.open {
+  transform: rotate(70deg);
+}
+.boat {
+  position: absolute;
+  bottom: 20px;
+  left: -60px;
+  width: 60px;
+  height: 30px;
+  background: brown;
+  border-radius: 10px;
+  animation: boatMove 10s linear infinite;
+}
+@keyframes boatMove {
+  0% { left: -60px; }
+  50% { left: 100%; }
+  100% { left: -60px; }
+}

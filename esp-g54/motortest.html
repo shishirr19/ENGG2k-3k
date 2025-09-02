@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Motor Control</title>
+</head>
+<body>
+  <h1>ESP32 Motor Control Testing</h1>
+  <button onclick="startMotor()" style="background-color: lightgreen;">Start Motor</button>
+  <button onclick="stopMotor()" style="background-color: lightblue;">Stop Motor</button>
+
+  <script>
+    const ESP32_IP = "http://192.168.0.24"; // your ESP32 IP
+
+    function startMotor() {
+      fetch(`${ESP32_IP}/motor/start`)
+        .then(r => r.text())
+        .then(console.log)
+        .catch(err => console.error("Error:", err));
+    }
+
+    function stopMotor() {
+      fetch(`${ESP32_IP}/motor/stop`)
+        .then(r => r.text())
+        .then(console.log)
+        .catch(err => console.error("Error:", err));
+    }
+  </script>
+</body>
+</html>
