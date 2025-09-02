@@ -2,8 +2,8 @@
 #include <WebServer.h>
 
 // -------- WiFi ----------
-const char* ssid = "Telstra3B0C8F";
-const char* password = "njte7r7fys";
+const char* ssid = "wifi name goes here";
+const char* password = "Wifi Password Goes here";
 
 // -------- Motor pins --------
 #define MOTOR_IN1 19
