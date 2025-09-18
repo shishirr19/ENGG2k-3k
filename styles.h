@@ -1,0 +1,108 @@
+const char STYLE_CSS[] PROGMEM = R"rawliteral(
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: #f4f4f4;
+}
+
+h1 {
+  text-align: center;
+}
+
+.section {
+  background: rgb(255, 255, 255);
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.bridge-control {
+
+}
+button {
+  margin: 10px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+button:hover {
+  opacity: 0.8;
+}
+
+.status-light {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  margin-right: 10px;
+  opacity: 0.3; /* dim by default /
+}
+
+.green { background-color: green; }
+.red { background-color: red; }
+.yellow { background-color: rgb(255, 136, 0); }
+
+
+.status-light.active {
+  opacity: 10;
+}
+
+@keyframes flash {
+  0% { opacity: 1; }
+  50% { opacity: 0.2; }
+  100% { opacity: 1; }
+}
+.status-light.flashing {
+  animation: flash 10s infinite;
+}
+
+.bridge-area {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background: #87CEEB; / sky */
+  overflow: hidden;
+}
+
+.river {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  background: #1E90FF;
+}
+
+.bridge-road {
+  position: absolute;
+  bottom: 60px;
+  left: 25%;
+  width: 50%;
+  height: 20px;
+  background: #060505;
+  transform-origin: bottom center;
+  transition: transform 2s;
+}
+.bridge-road.open {
+  transform: rotate(70deg);
+}
+
+.boat {
+  position: absolute;
+  bottom: 20px;
+  left: -60px;
+  width: 60px;
+  height: 30px;
+  background: brown;
+  border-radius: 10px;
+  animation: boatMove 10s linear infinite;
+}
+
+@keyframes boatMove {
+  0% { left: -60px; }
+  50% { left: 100%; }
+  100% { left: -60px; }
+}
+
+)rawliteral";
